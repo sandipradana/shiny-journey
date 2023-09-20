@@ -20,7 +20,7 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 	}
 }
 
-func (h *AuthHandler) RegisterRoutes(e *echo.Echo) {
+func (h *AuthHandler) RegisterRoutes(e *echo.Echo, jwtMiddleware echo.MiddlewareFunc) {
 	e.POST("/login", h.Login)
 	e.POST("/register", h.Register)
 }

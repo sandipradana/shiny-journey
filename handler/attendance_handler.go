@@ -20,11 +20,11 @@ func NewAttendanceHandler(attendanceService *service.AttendanceService) *Attenda
 	}
 }
 
-func (h *AttendanceHandler) RegisterRoutes(e *echo.Echo) {
-	e.POST("/attendances", h.CreateAttendance)
-	e.GET("/attendances/:id", h.GetAttendance)
-	e.PUT("/attendances/:id", h.UpdateAttendance)
-	e.DELETE("/attendances/:id", h.DeleteAttendance)
+func (h *AttendanceHandler) RegisterRoutes(e *echo.Echo, jwtMiddleware echo.MiddlewareFunc) {
+	e.POST("/attendances", h.CreateAttendance, jwtMiddleware)
+	e.GET("/attendances/:id", h.GetAttendance, jwtMiddleware)
+	e.PUT("/attendances/:id", h.UpdateAttendance, jwtMiddleware)
+	e.DELETE("/attendances/:id", h.DeleteAttendance, jwtMiddleware)
 }
 
 func (h *AttendanceHandler) CreateAttendance(c echo.Context) error {

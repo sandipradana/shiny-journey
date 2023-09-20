@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	echojwt "github.com/labstack/echo-jwt"
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -53,9 +54,11 @@ func main() {
 
 	e := echo.New()
 
-	authHandler.RegisterRoutes(e)
-	employeeHandler.RegisterRoutes(e)
-	attendaceHandler.RegisterRoutes(e)
+	jwtMiddleware := echojwt.JWT([]byte(jwtSecret))
+
+	authHandler.RegisterRoutes(e, jwtMiddleware)
+	employeeHandler.RegisterRoutes(e, jwtMiddleware)
+	attendaceHandler.RegisterRoutes(e, jwtMiddleware)
 
 	go e.Start(":8080")
 	go jobs.New(employeeService, attendanceService)

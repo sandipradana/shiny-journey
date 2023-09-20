@@ -20,11 +20,11 @@ func NewEmployeeHandler(employeeService *service.EmployeeService) *EmployeeHandl
 	}
 }
 
-func (h *EmployeeHandler) RegisterRoutes(e *echo.Echo) {
-	e.POST("/employees", h.CreateEmployee)
-	e.GET("/employees/:id", h.GetEmployee)
-	e.PUT("/employees/:id", h.UpdateEmployee)
-	e.DELETE("/employees/:id", h.DeleteEmployee)
+func (h *EmployeeHandler) RegisterRoutes(e *echo.Echo, jwtMiddleware echo.MiddlewareFunc) {
+	e.POST("/employees", h.CreateEmployee, jwtMiddleware)
+	e.GET("/employees/:id", h.GetEmployee, jwtMiddleware)
+	e.PUT("/employees/:id", h.UpdateEmployee, jwtMiddleware)
+	e.DELETE("/employees/:id", h.DeleteEmployee, jwtMiddleware)
 }
 
 func (h *EmployeeHandler) CreateEmployee(c echo.Context) error {
