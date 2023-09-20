@@ -14,15 +14,15 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const jwtSecret = "JwtSecret321!"
 
 func main() {
 
-	drv, err := sql.Open("mysql", "root@tcp(localhost:3306)/attendances")
+	drv, err := sql.Open("sqlite3", "file:ent.sqlite3?mode=memory&cache=shared&_fk=1")
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
