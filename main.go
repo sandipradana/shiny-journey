@@ -23,7 +23,7 @@ const jwtSecret = "JwtSecret321!"
 
 func main() {
 
-	drv, err := sql.Open("sqlite3", "file:ent.sqlite3?_fk=1")
+	drv, err := sql.Open("sqlite3", "file:ent.sqlite3?mode=memory&_fk=1")
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
