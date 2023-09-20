@@ -26,11 +26,12 @@ type Attendance struct {
 	CheckOutTime *time.Time `json:"check_out_time,omitempty"`
 	// Status holds the value of the "status" field.
 	Status attendance.Status `json:"status,omitempty"`
+	// EmployeeID holds the value of the "employee_id" field.
+	EmployeeID int `json:"employee_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AttendanceQuery when eager-loading is set.
-	Edges                AttendanceEdges `json:"edges"`
-	employee_attendances *int
-	selectValues         sql.SelectValues
+	Edges        AttendanceEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // AttendanceEdges holds the relations/edges for other nodes in the graph.
@@ -60,14 +61,12 @@ func (*Attendance) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case attendance.FieldID:
+		case attendance.FieldID, attendance.FieldEmployeeID:
 			values[i] = new(sql.NullInt64)
 		case attendance.FieldStatus:
 			values[i] = new(sql.NullString)
 		case attendance.FieldAttendanceDate, attendance.FieldCheckInTime, attendance.FieldCheckOutTime:
 			values[i] = new(sql.NullTime)
-		case attendance.ForeignKeys[0]: // employee_attendances
-			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -115,12 +114,11 @@ func (a *Attendance) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.Status = attendance.Status(value.String)
 			}
-		case attendance.ForeignKeys[0]:
+		case attendance.FieldEmployeeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field employee_attendances", value)
+				return fmt.Errorf("unexpected type %T for field employee_id", values[i])
 			} else if value.Valid {
-				a.employee_attendances = new(int)
-				*a.employee_attendances = int(value.Int64)
+				a.EmployeeID = int(value.Int64)
 			}
 		default:
 			a.selectValues.Set(columns[i], values[i])
@@ -178,6 +176,9 @@ func (a *Attendance) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", a.Status))
+	builder.WriteString(", ")
+	builder.WriteString("employee_id=")
+	builder.WriteString(fmt.Sprintf("%v", a.EmployeeID))
 	builder.WriteByte(')')
 	return builder.String()
 }

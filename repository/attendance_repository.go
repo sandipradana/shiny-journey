@@ -31,7 +31,7 @@ func (r *attendanceRepository) CreateAttendance(ctx context.Context, attendance 
 		SetNillableCheckInTime(attendance.CheckInTime).
 		SetNillableCheckOutTime(attendance.CheckOutTime).
 		SetStatus(attendance.Status).
-		SetEmployee(attendance.Edges.Employee).
+		SetEmployeeID(attendance.EmployeeID).
 		Save(ctx)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (r *attendanceRepository) UpdateAttendance(ctx context.Context, attendance 
 		SetAttendanceDate(attendance.AttendanceDate).
 		SetNillableCheckInTime(attendance.CheckInTime).
 		SetNillableCheckOutTime(attendance.CheckOutTime).
-		SetEmployee(attendance.Edges.Employee).
+		SetEmployeeID(attendance.EmployeeID).
 		Save(ctx)
 	if err != nil {
 		return nil, err

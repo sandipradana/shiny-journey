@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"shiny-journey/ent"
 	"shiny-journey/service"
@@ -32,11 +33,13 @@ func (h *AttendanceHandler) CreateAttendance(c echo.Context) error {
 
 	var attendanceRequest ent.Attendance
 	if err := c.Bind(&attendanceRequest); err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
 	}
 
 	createdAttendance, err := h.attendanceService.CreateAttendance(ctx, &attendanceRequest)
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Attendance creation failed"})
 	}
 

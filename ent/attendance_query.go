@@ -23,7 +23,6 @@ type AttendanceQuery struct {
 	inters       []Interceptor
 	predicates   []predicate.Attendance
 	withEmployee *EmployeeQuery
-	withFKs      bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -369,18 +368,11 @@ func (aq *AttendanceQuery) prepareQuery(ctx context.Context) error {
 func (aq *AttendanceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Attendance, error) {
 	var (
 		nodes       = []*Attendance{}
-		withFKs     = aq.withFKs
 		_spec       = aq.querySpec()
 		loadedTypes = [1]bool{
 			aq.withEmployee != nil,
 		}
 	)
-	if aq.withEmployee != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, attendance.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Attendance).scanValues(nil, columns)
 	}
@@ -412,10 +404,7 @@ func (aq *AttendanceQuery) loadEmployee(ctx context.Context, query *EmployeeQuer
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Attendance)
 	for i := range nodes {
-		if nodes[i].employee_attendances == nil {
-			continue
-		}
-		fk := *nodes[i].employee_attendances
+		fk := nodes[i].EmployeeID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -432,7 +421,7 @@ func (aq *AttendanceQuery) loadEmployee(ctx context.Context, query *EmployeeQuer
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "employee_attendances" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "employee_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -465,6 +454,9 @@ func (aq *AttendanceQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != attendance.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if aq.withEmployee != nil {
+			_spec.Node.AddColumnOnce(attendance.FieldEmployeeID)
 		}
 	}
 	if ps := aq.predicates; len(ps) > 0 {

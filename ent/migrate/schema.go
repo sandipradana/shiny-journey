@@ -28,7 +28,7 @@ var (
 		{Name: "check_in_time", Type: field.TypeTime, Nullable: true},
 		{Name: "check_out_time", Type: field.TypeTime, Nullable: true},
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"absent", "present"}},
-		{Name: "employee_attendances", Type: field.TypeInt, Nullable: true},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 	}
 	// AttendancesTable holds the schema information for the "attendances" table.
 	AttendancesTable = &schema.Table{

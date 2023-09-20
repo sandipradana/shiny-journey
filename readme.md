@@ -64,7 +64,7 @@ curl -X POST http://localhost:8080/attendances \
   -H "Content-Type: application/json" \
   -d '{
     "employee_id": 1,
-    "date": "2023-09-20",
+    "attendance_date": "2023-09-21T00:00:00Z",
     "status": "present"
   }'
 ```
@@ -80,7 +80,7 @@ curl -X PUT http://localhost:8080/attendances/1 \
   -H "Content-Type: application/json" \
   -d '{
     "employee_id": 2,
-    "date": "2023-09-21",
+    "attendance_date": "2023-09-21T12:34:56Z",
     "status": "absent"
   }'
 ```

@@ -81,17 +81,23 @@ func (au *AttendanceUpdate) SetStatus(a attendance.Status) *AttendanceUpdate {
 	return au
 }
 
-// SetEmployeeID sets the "employee" edge to the Employee entity by ID.
-func (au *AttendanceUpdate) SetEmployeeID(id int) *AttendanceUpdate {
-	au.mutation.SetEmployeeID(id)
+// SetEmployeeID sets the "employee_id" field.
+func (au *AttendanceUpdate) SetEmployeeID(i int) *AttendanceUpdate {
+	au.mutation.SetEmployeeID(i)
 	return au
 }
 
-// SetNillableEmployeeID sets the "employee" edge to the Employee entity by ID if the given value is not nil.
-func (au *AttendanceUpdate) SetNillableEmployeeID(id *int) *AttendanceUpdate {
-	if id != nil {
-		au = au.SetEmployeeID(*id)
+// SetNillableEmployeeID sets the "employee_id" field if the given value is not nil.
+func (au *AttendanceUpdate) SetNillableEmployeeID(i *int) *AttendanceUpdate {
+	if i != nil {
+		au.SetEmployeeID(*i)
 	}
+	return au
+}
+
+// ClearEmployeeID clears the value of the "employee_id" field.
+func (au *AttendanceUpdate) ClearEmployeeID() *AttendanceUpdate {
+	au.mutation.ClearEmployeeID()
 	return au
 }
 
@@ -279,17 +285,23 @@ func (auo *AttendanceUpdateOne) SetStatus(a attendance.Status) *AttendanceUpdate
 	return auo
 }
 
-// SetEmployeeID sets the "employee" edge to the Employee entity by ID.
-func (auo *AttendanceUpdateOne) SetEmployeeID(id int) *AttendanceUpdateOne {
-	auo.mutation.SetEmployeeID(id)
+// SetEmployeeID sets the "employee_id" field.
+func (auo *AttendanceUpdateOne) SetEmployeeID(i int) *AttendanceUpdateOne {
+	auo.mutation.SetEmployeeID(i)
 	return auo
 }
 
-// SetNillableEmployeeID sets the "employee" edge to the Employee entity by ID if the given value is not nil.
-func (auo *AttendanceUpdateOne) SetNillableEmployeeID(id *int) *AttendanceUpdateOne {
-	if id != nil {
-		auo = auo.SetEmployeeID(*id)
+// SetNillableEmployeeID sets the "employee_id" field if the given value is not nil.
+func (auo *AttendanceUpdateOne) SetNillableEmployeeID(i *int) *AttendanceUpdateOne {
+	if i != nil {
+		auo.SetEmployeeID(*i)
 	}
+	return auo
+}
+
+// ClearEmployeeID clears the value of the "employee_id" field.
+func (auo *AttendanceUpdateOne) ClearEmployeeID() *AttendanceUpdateOne {
+	auo.mutation.ClearEmployeeID()
 	return auo
 }
 

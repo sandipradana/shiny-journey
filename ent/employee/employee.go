@@ -26,7 +26,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "attendance" package.
 	AttendancesInverseTable = "attendances"
 	// AttendancesColumn is the table column denoting the attendances relation/edge.
-	AttendancesColumn = "employee_attendances"
+	AttendancesColumn = "employee_id"
 )
 
 // Columns holds all SQL columns for employee fields.

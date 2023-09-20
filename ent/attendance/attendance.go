@@ -22,6 +22,8 @@ const (
 	FieldCheckOutTime = "check_out_time"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
+	// FieldEmployeeID holds the string denoting the employee_id field in the database.
+	FieldEmployeeID = "employee_id"
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "employee"
 	// Table holds the table name of the attendance in the database.
@@ -32,7 +34,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
 	EmployeeInverseTable = "employees"
 	// EmployeeColumn is the table column denoting the employee relation/edge.
-	EmployeeColumn = "employee_attendances"
+	EmployeeColumn = "employee_id"
 )
 
 // Columns holds all SQL columns for attendance fields.
@@ -42,23 +44,13 @@ var Columns = []string{
 	FieldCheckInTime,
 	FieldCheckOutTime,
 	FieldStatus,
-}
-
-// ForeignKeys holds the SQL foreign-keys that are owned by the "attendances"
-// table and are not defined as standalone fields in the schema.
-var ForeignKeys = []string{
-	"employee_attendances",
+	FieldEmployeeID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
-			return true
-		}
-	}
-	for i := range ForeignKeys {
-		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -114,6 +106,11 @@ func ByCheckOutTime(opts ...sql.OrderTermOption) OrderOption {
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByEmployeeID orders the results by the employee_id field.
+func ByEmployeeID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEmployeeID, opts...).ToFunc()
 }
 
 // ByEmployeeField orders the results by employee field.

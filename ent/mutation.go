@@ -751,9 +751,53 @@ func (m *AttendanceMutation) ResetStatus() {
 	m.status = nil
 }
 
-// SetEmployeeID sets the "employee" edge to the Employee entity by id.
-func (m *AttendanceMutation) SetEmployeeID(id int) {
-	m.employee = &id
+// SetEmployeeID sets the "employee_id" field.
+func (m *AttendanceMutation) SetEmployeeID(i int) {
+	m.employee = &i
+}
+
+// EmployeeID returns the value of the "employee_id" field in the mutation.
+func (m *AttendanceMutation) EmployeeID() (r int, exists bool) {
+	v := m.employee
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmployeeID returns the old "employee_id" field's value of the Attendance entity.
+// If the Attendance object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttendanceMutation) OldEmployeeID(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEmployeeID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEmployeeID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmployeeID: %w", err)
+	}
+	return oldValue.EmployeeID, nil
+}
+
+// ClearEmployeeID clears the value of the "employee_id" field.
+func (m *AttendanceMutation) ClearEmployeeID() {
+	m.employee = nil
+	m.clearedFields[attendance.FieldEmployeeID] = struct{}{}
+}
+
+// EmployeeIDCleared returns if the "employee_id" field was cleared in this mutation.
+func (m *AttendanceMutation) EmployeeIDCleared() bool {
+	_, ok := m.clearedFields[attendance.FieldEmployeeID]
+	return ok
+}
+
+// ResetEmployeeID resets all changes to the "employee_id" field.
+func (m *AttendanceMutation) ResetEmployeeID() {
+	m.employee = nil
+	delete(m.clearedFields, attendance.FieldEmployeeID)
 }
 
 // ClearEmployee clears the "employee" edge to the Employee entity.
@@ -763,15 +807,7 @@ func (m *AttendanceMutation) ClearEmployee() {
 
 // EmployeeCleared reports if the "employee" edge to the Employee entity was cleared.
 func (m *AttendanceMutation) EmployeeCleared() bool {
-	return m.clearedemployee
-}
-
-// EmployeeID returns the "employee" edge ID in the mutation.
-func (m *AttendanceMutation) EmployeeID() (id int, exists bool) {
-	if m.employee != nil {
-		return *m.employee, true
-	}
-	return
+	return m.EmployeeIDCleared() || m.clearedemployee
 }
 
 // EmployeeIDs returns the "employee" edge IDs in the mutation.
@@ -824,7 +860,7 @@ func (m *AttendanceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AttendanceMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.attendance_date != nil {
 		fields = append(fields, attendance.FieldAttendanceDate)
 	}
@@ -836,6 +872,9 @@ func (m *AttendanceMutation) Fields() []string {
 	}
 	if m.status != nil {
 		fields = append(fields, attendance.FieldStatus)
+	}
+	if m.employee != nil {
+		fields = append(fields, attendance.FieldEmployeeID)
 	}
 	return fields
 }
@@ -853,6 +892,8 @@ func (m *AttendanceMutation) Field(name string) (ent.Value, bool) {
 		return m.CheckOutTime()
 	case attendance.FieldStatus:
 		return m.Status()
+	case attendance.FieldEmployeeID:
+		return m.EmployeeID()
 	}
 	return nil, false
 }
@@ -870,6 +911,8 @@ func (m *AttendanceMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldCheckOutTime(ctx)
 	case attendance.FieldStatus:
 		return m.OldStatus(ctx)
+	case attendance.FieldEmployeeID:
+		return m.OldEmployeeID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Attendance field %s", name)
 }
@@ -907,6 +950,13 @@ func (m *AttendanceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetStatus(v)
 		return nil
+	case attendance.FieldEmployeeID:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmployeeID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Attendance field %s", name)
 }
@@ -914,13 +964,16 @@ func (m *AttendanceMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *AttendanceMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *AttendanceMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	}
 	return nil, false
 }
 
@@ -943,6 +996,9 @@ func (m *AttendanceMutation) ClearedFields() []string {
 	if m.FieldCleared(attendance.FieldCheckOutTime) {
 		fields = append(fields, attendance.FieldCheckOutTime)
 	}
+	if m.FieldCleared(attendance.FieldEmployeeID) {
+		fields = append(fields, attendance.FieldEmployeeID)
+	}
 	return fields
 }
 
@@ -963,6 +1019,9 @@ func (m *AttendanceMutation) ClearField(name string) error {
 	case attendance.FieldCheckOutTime:
 		m.ClearCheckOutTime()
 		return nil
+	case attendance.FieldEmployeeID:
+		m.ClearEmployeeID()
+		return nil
 	}
 	return fmt.Errorf("unknown Attendance nullable field %s", name)
 }
@@ -982,6 +1041,9 @@ func (m *AttendanceMutation) ResetField(name string) error {
 		return nil
 	case attendance.FieldStatus:
 		m.ResetStatus()
+		return nil
+	case attendance.FieldEmployeeID:
+		m.ResetEmployeeID()
 		return nil
 	}
 	return fmt.Errorf("unknown Attendance field %s", name)

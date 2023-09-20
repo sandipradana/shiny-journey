@@ -70,6 +70,11 @@ func CheckOutTime(v time.Time) predicate.Attendance {
 	return predicate.Attendance(sql.FieldEQ(FieldCheckOutTime, v))
 }
 
+// EmployeeID applies equality check predicate on the "employee_id" field. It's identical to EmployeeIDEQ.
+func EmployeeID(v int) predicate.Attendance {
+	return predicate.Attendance(sql.FieldEQ(FieldEmployeeID, v))
+}
+
 // AttendanceDateEQ applies the EQ predicate on the "attendance_date" field.
 func AttendanceDateEQ(v time.Time) predicate.Attendance {
 	return predicate.Attendance(sql.FieldEQ(FieldAttendanceDate, v))
@@ -228,6 +233,36 @@ func StatusIn(vs ...Status) predicate.Attendance {
 // StatusNotIn applies the NotIn predicate on the "status" field.
 func StatusNotIn(vs ...Status) predicate.Attendance {
 	return predicate.Attendance(sql.FieldNotIn(FieldStatus, vs...))
+}
+
+// EmployeeIDEQ applies the EQ predicate on the "employee_id" field.
+func EmployeeIDEQ(v int) predicate.Attendance {
+	return predicate.Attendance(sql.FieldEQ(FieldEmployeeID, v))
+}
+
+// EmployeeIDNEQ applies the NEQ predicate on the "employee_id" field.
+func EmployeeIDNEQ(v int) predicate.Attendance {
+	return predicate.Attendance(sql.FieldNEQ(FieldEmployeeID, v))
+}
+
+// EmployeeIDIn applies the In predicate on the "employee_id" field.
+func EmployeeIDIn(vs ...int) predicate.Attendance {
+	return predicate.Attendance(sql.FieldIn(FieldEmployeeID, vs...))
+}
+
+// EmployeeIDNotIn applies the NotIn predicate on the "employee_id" field.
+func EmployeeIDNotIn(vs ...int) predicate.Attendance {
+	return predicate.Attendance(sql.FieldNotIn(FieldEmployeeID, vs...))
+}
+
+// EmployeeIDIsNil applies the IsNil predicate on the "employee_id" field.
+func EmployeeIDIsNil() predicate.Attendance {
+	return predicate.Attendance(sql.FieldIsNull(FieldEmployeeID))
+}
+
+// EmployeeIDNotNil applies the NotNil predicate on the "employee_id" field.
+func EmployeeIDNotNil() predicate.Attendance {
+	return predicate.Attendance(sql.FieldNotNull(FieldEmployeeID))
 }
 
 // HasEmployee applies the HasEdge predicate on the "employee" edge.

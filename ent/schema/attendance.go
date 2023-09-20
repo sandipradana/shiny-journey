@@ -19,6 +19,7 @@ func (Attendance) Fields() []ent.Field {
 		field.Time("check_in_time").Optional().Nillable(),
 		field.Time("check_out_time").Optional().Nillable(),
 		field.Enum("status").Values("absent", "present"),
+		field.Int("employee_id").Optional(),
 	}
 }
 
@@ -26,6 +27,6 @@ func (Attendance) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("employee", Employee.Type).
 			Ref("attendances").
-			Unique(),
+			Unique().Field("employee_id"),
 	}
 }

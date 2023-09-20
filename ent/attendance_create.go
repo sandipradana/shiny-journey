@@ -61,16 +61,16 @@ func (ac *AttendanceCreate) SetStatus(a attendance.Status) *AttendanceCreate {
 	return ac
 }
 
-// SetEmployeeID sets the "employee" edge to the Employee entity by ID.
-func (ac *AttendanceCreate) SetEmployeeID(id int) *AttendanceCreate {
-	ac.mutation.SetEmployeeID(id)
+// SetEmployeeID sets the "employee_id" field.
+func (ac *AttendanceCreate) SetEmployeeID(i int) *AttendanceCreate {
+	ac.mutation.SetEmployeeID(i)
 	return ac
 }
 
-// SetNillableEmployeeID sets the "employee" edge to the Employee entity by ID if the given value is not nil.
-func (ac *AttendanceCreate) SetNillableEmployeeID(id *int) *AttendanceCreate {
-	if id != nil {
-		ac = ac.SetEmployeeID(*id)
+// SetNillableEmployeeID sets the "employee_id" field if the given value is not nil.
+func (ac *AttendanceCreate) SetNillableEmployeeID(i *int) *AttendanceCreate {
+	if i != nil {
+		ac.SetEmployeeID(*i)
 	}
 	return ac
 }
@@ -181,7 +181,7 @@ func (ac *AttendanceCreate) createSpec() (*Attendance, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.employee_attendances = &nodes[0]
+		_node.EmployeeID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

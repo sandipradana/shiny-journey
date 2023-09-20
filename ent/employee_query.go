@@ -412,7 +412,9 @@ func (eq *EmployeeQuery) loadAttendances(ctx context.Context, query *AttendanceQ
 			init(nodes[i])
 		}
 	}
-	query.withFKs = true
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(attendance.FieldEmployeeID)
+	}
 	query.Where(predicate.Attendance(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(employee.AttendancesColumn), fks...))
 	}))
@@ -421,13 +423,10 @@ func (eq *EmployeeQuery) loadAttendances(ctx context.Context, query *AttendanceQ
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.employee_attendances
-		if fk == nil {
-			return fmt.Errorf(`foreign-key "employee_attendances" is nil for node %v`, n.ID)
-		}
-		node, ok := nodeids[*fk]
+		fk := n.EmployeeID
+		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "employee_attendances" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "employee_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}
