@@ -1,3 +1,6 @@
+## https://shinyjourney.fly.dev/
+
+
 ### auth / register
 ```
 curl --location 'http://localhost:8080/register' \
